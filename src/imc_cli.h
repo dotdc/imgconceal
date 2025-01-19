@@ -31,7 +31,7 @@ static PassBuff *__alloc_passbuff();
 static PassBuff *imc_cli_password_input(bool confirm);
 
 // Convert an already parsed password string from the system's locale to UTF-8
-// 'from_argv' sould be set to 'true' if the string was parsed from the command line options (char *argv[]),
+// 'from_argv' should be set to 'true' if the string was parsed from the command line options (char *argv[]),
 // otherwise its should be 'false' (that is, read from stdin).
 static inline void __password_normalize(PassBuff *password, bool from_argv);
 

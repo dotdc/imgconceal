@@ -134,7 +134,7 @@ int imc_steg_init(const char *path, const PassBuff *password, CarrierImage **out
     imc_crypto_shuffle_ptr(
         carrier_img->crypto,    // Has the state of the pseudo-random number generator
         (uintptr_t *)(&carrier_img->carrier[0]),    // Beginning of the array
-        carrier_img->carrier_lenght,                // Amount of elements on the array
+        carrier_img->carrier_length,                // Amount of elements on the array
         carrier_img->verbose    // Print the progress if on "verbose" mode
     );
     
@@ -274,7 +274,7 @@ int imc_steg_insert(CarrierImage *carrier_img, const char *file_path)
 
     #ifdef _WIN32
     uLongf compress_size_win = zlib_buffer_size;
-    /* Note: For some reason, on Windows the lenght of the buffer size variable
+    /* Note: For some reason, on Windows the length of the buffer size variable
        is 4 bytes, while on Linux its 8 bytes. Since my code assumes that it is
        going to be 8 bytes, then I am creating this additional variable so I do
        not pass to the compression function a pointer to a size different than
@@ -322,7 +322,7 @@ int imc_steg_insert(CarrierImage *carrier_img, const char *file_path)
     // Total size of the encrypted stream
     const size_t crypto_size = IMC_CRYPTO_OVERHEAD + zlib_buffer_size;
 
-    if (crypto_size * 8 > carrier_img->carrier_lenght - carrier_img->carrier_pos)
+    if (crypto_size * 8 > carrier_img->carrier_length - carrier_img->carrier_pos)
     {
         // The carrier is not big enough to store the encrypted stream
         imc_clear_free(zlib_buffer, zlib_buffer_size);
@@ -354,7 +354,7 @@ int imc_steg_insert(CarrierImage *carrier_img, const char *file_path)
         return IMC_ERR_CRYPTO_FAIL;
     }
 
-    // Clear and free the buffer of the unencrypted strem
+    // Clear and free the buffer of the unencrypted stream
     imc_clear_free(zlib_buffer, zlib_buffer_size);
     if (carrier_img->verbose) printf("Done!\n");
 
@@ -395,7 +395,7 @@ int imc_steg_insert(CarrierImage *carrier_img, const char *file_path)
 // Returns 'true' if the read could be made (the bytes are stored of the provided buffer).
 static bool __read_payload(CarrierImage *carrier_img, size_t num_bytes, uint8_t *out_buffer)
 {
-    if ( (num_bytes * 8) > (carrier_img->carrier_lenght - carrier_img->carrier_pos) )
+    if ( (num_bytes * 8) > (carrier_img->carrier_length - carrier_img->carrier_pos) )
     {
         // The amount of data left to be read is bigger than the requested amount
         return false;
@@ -533,7 +533,7 @@ int imc_steg_extract(CarrierImage *carrier_img)
 
     #ifdef _WIN32
     uLongf decompress_size_win = decompress_size;
-    /* Note: For some reason, on Windows the lenght of the buffer size variable
+    /* Note: For some reason, on Windows the length of the buffer size variable
        is 4 bytes, while on Linux its 8 bytes. Since my code assumes that it is
        going to be 8 bytes, then I am creating this additional variable so I do
        not pass to the decompression function a pointer to a size different than
@@ -615,7 +615,7 @@ int imc_steg_extract(CarrierImage *carrier_img)
     };
 
     // Get the name of the hidden file
-    char file_name[name_len + 16];  // Extra size added in case it needs to be renamed for avoinding name collision
+    char file_name[name_len + 16];  // Extra size added in case it needs to be renamed for avoiding name collision
     memset(file_name, 0, sizeof(file_name));
     memcpy(file_name, file_info->file_name, name_len);
 
@@ -705,7 +705,7 @@ void imc_steg_seek_to_end(CarrierImage *carrier_img)
     
     while (true)
     {
-        // Read position after the last successfull check
+        // Read position after the last successful check
         original_pos = carrier_img->carrier_pos;
         
         // Magic bytes of the current data segment
@@ -807,7 +807,7 @@ void imc_jpeg_carrier_open(CarrierImage *carrier_img)
         printf("Reading JPEG image... Done!  \n");
     }
 
-    // Calculate the total amount of DCT coeficients
+    // Calculate the total amount of DCT coefficients
     size_t dct_count = 0;
     for (int comp = 0; comp < jpeg_obj->num_components; comp++)
     {
@@ -890,7 +890,7 @@ void imc_jpeg_carrier_open(CarrierImage *carrier_img)
         exit(EXIT_FAILURE);
     }
     
-    // Free the unusued space of the array
+    // Free the unused space of the array
     carrier_bytes = imc_realloc(carrier_bytes, carrier_count * sizeof(uint8_t));
 
     // Store the pointers to each element of the bytes array
@@ -904,18 +904,18 @@ void imc_jpeg_carrier_open(CarrierImage *carrier_img)
     // Store the output
     carrier_img->bytes = carrier_bytes;             // Array of bytes
     carrier_img->carrier = carrier_ptr;             // Array of pointers to bytes
-    carrier_img->carrier_lenght = carrier_count;    // Total amount of pointers to bytes
+    carrier_img->carrier_length = carrier_count;    // Total amount of pointers to bytes
     carrier_img->object = jpeg_obj;                 // Image handler
     
     // Store the additional heap allocated memory for the purpose of memory management
     carrier_img->heap = imc_malloc(sizeof(void *) * 2);
     carrier_img->heap[0] = (void *)jpeg_err;
     carrier_img->heap[1] = (void *)jpeg_dct;
-    carrier_img->heap_lenght = 1;
+    carrier_img->heap_length = 1;
     /* Note:
-        The lenght above is set to 1, even though it is actually 2, because
+        The length above is set to 1, even though it is actually 2, because
         the memory of '*jpeg_dct' is managed by libjpeg-turbo (instead of my code).
-        The lenght of 1 prevents my code from attempting to free that memory.
+        The length of 1 prevents my code from attempting to free that memory.
     */
 }
 
@@ -1109,7 +1109,7 @@ void imc_png_carrier_open(CarrierImage *carrier_img)
 
     // Store the information about the carrier bytes
     carrier_img->carrier = carrier;
-    carrier_img->carrier_lenght = pos;
+    carrier_img->carrier_length = pos;
     carrier_img->bytes = initial_offset;
 }
 
@@ -1279,14 +1279,14 @@ void imc_webp_carrier_open(CarrierImage *carrier_img)
 
     // Store the information about the carrier bytes
     carrier_img->carrier = carrier;
-    carrier_img->carrier_lenght = pos;
+    carrier_img->carrier_length = pos;
     carrier_img->bytes = in_buffer;
 
     // Remember the size of the input buffer
     carrier_img->heap = imc_malloc(sizeof(void *));
     carrier_img->heap[0] = imc_malloc(sizeof(size_t));
     *(size_t*)carrier_img->heap[0] = file_size;
-    carrier_img->heap_lenght = 1;
+    carrier_img->heap_length = 1;
 }
 
 // Change a file path in order to make it unique
@@ -1366,7 +1366,7 @@ static bool __is_directory(const char *path)
     return false;
 }
 
-// Copy the "last access" and "last mofified" times from the one file (source) to the other (dest)
+// Copy the "last access" and "last modified" times from the one file (source) to the other (dest)
 static void __copy_file_times(FILE *source_file, const char *dest_path)
 {
     #ifdef _WIN32   // Windows systems
@@ -1404,7 +1404,7 @@ static void __copy_file_times(FILE *source_file, const char *dest_path)
     
     #else   // Unix systems
     
-    // Get the "last access" and "last mofified" times from the original file
+    // Get the "last access" and "last modified" times from the original file
     const int og_descriptor = fileno(source_file);
     struct stat og_stats = {0};
     fstat(og_descriptor, &og_stats);
@@ -1589,7 +1589,7 @@ int imc_jpeg_carrier_save(CarrierImage *carrier_img, const char *save_path)
         printf("Writing JPEG image... Done!  \n");
     }
 
-    // Copy the "last access" and "last mofified" times from the original image
+    // Copy the "last access" and "last modified" times from the original image
     __copy_file_times(carrier_img->file, jpeg_path);
 
     return IMC_SUCCESS;
@@ -1868,7 +1868,7 @@ int imc_png_carrier_save(CarrierImage *carrier_img, const char *save_path)
     fclose(png_file);
     if (carrier_img->verbose) printf("Writing PNG image... Done!  \n");
 
-    // Copy the "last access" and "last mofified" times from the original image
+    // Copy the "last access" and "last modified" times from the original image
     __copy_file_times(carrier_img->file, png_path);
 
     return IMC_SUCCESS;
@@ -1877,7 +1877,7 @@ int imc_png_carrier_save(CarrierImage *carrier_img, const char *save_path)
 // Progress monitor when writing a PNG image
 static int __webp_write_callback(int percent, const WebPPicture* webp_obj)
 {
-    // Note: libwebp has its own timer for controling the progress update frequency,
+    // Note: libwebp has its own timer for controlling the progress update frequency,
     //       so we are not using ours from 'printf_prog()'.
     printf("Writing WebP image... %d %%\r", percent);
     return true;    // Returning 'true' allows the encoding to continue, 'false' would cancel it
@@ -2029,7 +2029,7 @@ int imc_webp_carrier_save(CarrierImage *carrier_img, const char *save_path)
     if (carrier_img->verbose) printf("Writing WebP image... Done!  \n");
     fclose(webp_file);
 
-    // Copy the "last access" and "last mofified" times from the original image
+    // Copy the "last access" and "last modified" times from the original image
     __copy_file_times(carrier_img->file, webp_path);
 
     // Garbage collection
@@ -2043,7 +2043,7 @@ int imc_webp_carrier_save(CarrierImage *carrier_img, const char *save_path)
 // Free the memory of the array of heap pointers in a CarrierImage struct
 static void __carrier_heap_free(CarrierImage *carrier_img)
 {
-    for (size_t i = 0; i < carrier_img->heap_lenght; i++)
+    for (size_t i = 0; i < carrier_img->heap_length; i++)
     {
         imc_free(carrier_img->heap[i]);
     }

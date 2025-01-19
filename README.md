@@ -1,6 +1,6 @@
 # imgconceal: steganography on JPEG, PNG and WebP images
 
-*imgconceal* is a tool for image steganography, that can hide files inside JPEG, PNG and WebP images. A password an be used for extracting the data later. The image with hidden data looks the same to the human eye as the regular image.
+*imgconceal* is a tool for image steganography, that can hide files inside JPEG, PNG and WebP images. A password can be used for extracting the data later. The image with hidden data looks the same to the human eye as the regular image.
 
 **Downloads:**
 * [imgconceal for Windows](https://github.com/tbpaolini/imgconceal/releases/download/v1.0.4/imgconceal.exe) (2.60 MB)

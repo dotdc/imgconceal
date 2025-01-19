@@ -47,7 +47,7 @@ some conflicts with the symbols defined by `windows.h` or the standard libraries
 #include <webp/encode.h>    // libwebp (WebP images - encoding)
 #include <webp/mux.h>       // libwebp (WebP images - container manipulation)
 #include <zlib.h>       // data compression
-#include "../lib/shishua-sse2.h"    // Psueudo-random number generator
+#include "../lib/shishua-sse2.h"    // Pseudo-random number generator
 
 // First party libraries
 #include "globals.h"

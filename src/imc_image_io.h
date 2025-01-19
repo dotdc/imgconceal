@@ -53,7 +53,7 @@ typedef void (*carrier_close_func)(struct CarrierImage *);
 typedef struct CarrierImage
 {
     // File parameters
-    FILE *file;             // File ponter of the image
+    FILE *file;             // File pointer of the image
     void *object;           // Pointer to the handler that should be passed to the image processing functions
     CryptoContext *crypto;  // Secret parameters generated from the password
     enum ImageType type;    // Format of the image
@@ -63,8 +63,8 @@ typedef struct CarrierImage
     // Manipulation of the file's carrier
     carrier_bytes_t bytes;      // Carrier bytes (same order as on the image)
     carrier_bytes_t *carrier;   // Array of pointers to the carrier bytes of the image (array order is shuffled using the password)
-    size_t carrier_lenght;      // Amount of carrier bytes
-    size_t carrier_pos;         // Current writting position on the 'carrier' array
+    size_t carrier_length;      // Amount of carrier bytes
+    size_t carrier_pos;         // Current writing position on the 'carrier' array
     carrier_open_func open;     // Find the carrier bytes
     carrier_save_func save;     // Hide data in the carrier
     carrier_close_func close;   // Free the memory used for the carrier operation
@@ -75,7 +75,7 @@ typedef struct CarrierImage
     
     // Memory management
     void **heap;            // Array of pointers to other heap allocated memory for this image
-    size_t heap_lenght;     // Amount of elements on the 'heap' array
+    size_t heap_length;     // Amount of elements on the 'heap' array
 } CarrierImage;
 
 // Store the metadata of the hidden file
@@ -176,7 +176,7 @@ static bool __resolve_filename_collision(char *path);
 // Check if a given path is a directory
 static bool __is_directory(const char *path);
 
-// Copy the "last access" and "last mofified" times from the one file (source) to the other (dest)
+// Copy the "last access" and "last modified" times from the one file (source) to the other (dest)
 static void __copy_file_times(FILE *source_file, const char *dest_path);
 
 // Progress monitor when writing a JPEG image

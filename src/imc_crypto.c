@@ -57,7 +57,7 @@ int imc_crypto_context_create(const PassBuff *password, CryptoContext **out)
     prng_init(&context->shishua_state, prng_seed);
     prng_gen(&context->shishua_state, context->prng_buffer.buf, IMC_PRNG_BUFFER);
     
-    // Release the unecessary memory and store the output
+    // Release the unnecessary memory and store the output
     sodium_munlock(prng_seed, sizeof(prng_seed));
     sodium_munlock(output, sizeof(output));
     *out = context;
@@ -169,7 +169,7 @@ int imc_crypto_encrypt(
     // Add the bytes needed by libsodium's header
     *output_len += crypto_secretstream_xchacha20poly1305_HEADERBYTES;
 
-    // Pointers to the adresses where the version and size will be written
+    // Pointers to the addresses where the version and size will be written
     uint32_t *version = (uint32_t *)&output[4];
     uint32_t *c_size = (uint32_t *)&output[8];
     

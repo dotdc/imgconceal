@@ -223,7 +223,7 @@ static PassBuff *imc_cli_password_input(bool confirm)
 }
 
 // Convert an already parsed password string from the system's locale to UTF-8
-// 'from_argv' sould be set to 'true' if the string was parsed from the command line options (char *argv[]),
+// 'from_argv' should be set to 'true' if the string was parsed from the command line options (char *argv[]),
 // otherwise its should be 'false' (that is, read from stdin).
 static inline void __password_normalize(PassBuff *password, bool from_argv)
 {
@@ -266,7 +266,7 @@ static inline void __password_normalize(PassBuff *password, bool from_argv)
     iconv_t u8_conv = iconv_open("UTF-8", "");
     if (!u8_conv) return;
 
-    char *const in_text = password->buffer; // Input text in the system's enconding
+    char *const in_text = password->buffer; // Input text in the system's encoding
     size_t in_text_left = password->length; // Amount of bytes of the input remaining to be converted
 
     const size_t out_size = in_text_left * 4;   // Size of the output buffer (UTF-8 characters can use up to 4 bytes each)
@@ -275,7 +275,7 @@ static inline void __password_normalize(PassBuff *password, bool from_argv)
     sodium_memzero(out_text, sizeof(out_text));
     size_t out_text_left = out_size;            // Amount of bytes left in the buffer
 
-    // Pointers to the inut and output buffers
+    // Pointers to the input and output buffers
     char *in_text_ptr = in_text;        // Current position on the input
     char *out_text_ptr = &out_text[0];  // Current position on the output
     
@@ -481,7 +481,7 @@ static inline void __execute_options(struct argp_state *state, void *options)
         }
         else // (mode == EXTRACT) || (mode == CHECK)
         {
-            opt->password = imc_cli_password_input(false);  // Input the passowrd once
+            opt->password = imc_cli_password_input(false);  // Input the password once
         }
     }
 
@@ -556,7 +556,7 @@ static inline void __execute_options(struct argp_state *state, void *options)
                 argp_failure(state, EXIT_FAILURE, 0,
                     "FAIL: Image '%s' contains no hidden data or the password is incorrect.\n"\
                     "In order to append files to the image, you have to use the same password as the previously files hidden there.\n"\
-                    "If you want to overwite the existing hidden files (if any), please run the program without the '--append' option.",
+                    "If you want to overwrite the existing hidden files (if any), please run the program without the '--append' option.",
                     basename(steg_path));
             }
         }
@@ -597,7 +597,7 @@ static inline void __execute_options(struct argp_state *state, void *options)
                 
                 case IMC_ERR_FILE_TOO_BIG:
                     char size_left[256];
-                    __filesize_to_string((steg_image->carrier_lenght - steg_image->carrier_pos) / 8, size_left, sizeof(size_left));
+                    __filesize_to_string((steg_image->carrier_length - steg_image->carrier_pos) / 8, size_left, sizeof(size_left));
                     fprintf(
                         stderr, "FAIL: no enough space in '%s' to hide '%s' (free space: %s).\n",
                         basename(opt->input), basename(node->data), size_left
@@ -609,7 +609,7 @@ static inline void __execute_options(struct argp_state *state, void *options)
                     break;
                 
                 default:
-                    argp_failure(state, EXIT_FAILURE, 0, "unknown error when hidding data. (%d)", hide_status);
+                    argp_failure(state, EXIT_FAILURE, 0, "unknown error when hiding data. (%d)", hide_status);
                     break;
             }
 
@@ -741,7 +741,7 @@ static inline void __execute_options(struct argp_state *state, void *options)
                         if (mode == CHECK)
                         {
                             char str_buffer[256];
-                            __filesize_to_string(steg_image->carrier_lenght / 8, str_buffer, sizeof(str_buffer));
+                            __filesize_to_string(steg_image->carrier_length / 8, str_buffer, sizeof(str_buffer));
                             printf(
                                 "Image '%s' contains no hidden data or the password is incorrect.\n"
                                 "This image can hide approximately %s "
@@ -805,7 +805,7 @@ static inline void __execute_options(struct argp_state *state, void *options)
         if (mode == CHECK && has_file)
         {
             char str_buffer[256];
-            __filesize_to_string((steg_image->carrier_lenght - steg_image->carrier_pos) / 8, str_buffer, sizeof(str_buffer));
+            __filesize_to_string((steg_image->carrier_length - steg_image->carrier_pos) / 8, str_buffer, sizeof(str_buffer));
             printf(
                 "\nThe cover image '%s' can hide approximately more %s "
                 "(after compression of hidden data).\n",
